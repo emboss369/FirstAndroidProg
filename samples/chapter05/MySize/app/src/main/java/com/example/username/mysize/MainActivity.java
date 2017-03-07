@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveData() {
-        super.onPause();
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = pref.edit();
