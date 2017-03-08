@@ -31,19 +31,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            isRunning = true;
             long minute = millisUntilFinished / 1000 / 60;
             long second = millisUntilFinished / 1000 % 60;
             mTimerText.setText(String.format("%1d:%2$02d", minute, second));
-            mFab.setImageResource(R.drawable.ic_stop_black_24dp);
         }
 
         @Override
         public void onFinish() {
-            isRunning = false;
             mTimerText.setText("0:00");
-            mFab.setImageResource(R.drawable.ic_play_arrow_black_24dp);
             mSoundPool.play(mSoundResId, 1.0f, 1.0f, 0, 0, 1.0f);
+
         }
     }
 
@@ -55,18 +52,20 @@ public class MainActivity extends AppCompatActivity {
 
         mTimerText = (TextView) findViewById(R.id.timer_text);
         mTimerText.setText("3:00");
-        mTimer = new MyCountDownTimer(3 * 60 * 1000, 1000);
+        mTimer = new MyCountDownTimer(3 * 60 * 1000, 100);
 
         mFab = (FloatingActionButton) findViewById(R.id.play_stop);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mTimer.isRunning) {
-                    mTimer.cancel();
                     mTimer.isRunning = false;
+                    mTimer.cancel();
                     mFab.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                 } else {
+                    mTimer.isRunning = true;
                     mTimer.start();
+                    mFab.setImageResource(R.drawable.ic_stop_black_24dp);
                 }
             }
         });
