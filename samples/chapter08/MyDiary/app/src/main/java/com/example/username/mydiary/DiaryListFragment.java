@@ -64,11 +64,10 @@ public class DiaryListFragment extends Fragment {
         inflater.inflate(R.menu.menu_diary_list, menu);
         MenuItem addDiary = menu.findItem(R.id.menu_item_add_diary);
         MenuItem deleteAll = menu.findItem(R.id.menu_item_delete_all);
-        MenuItem slideShow = menu.findItem(R.id.menu_item_slide_show);
-        MyUtils.tintMenuIcon(getContext(),addDiary,android.R.color.white);
-        MyUtils.tintMenuIcon(getContext(),deleteAll,android.R.color.white);
-        MyUtils.tintMenuIcon(getContext(),slideShow,android.R.color.white);
+        MyUtils.tintMenuIcon(getContext(), addDiary, android.R.color.white);
+        MyUtils.tintMenuIcon(getContext(), deleteAll, android.R.color.white);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -77,7 +76,7 @@ public class DiaryListFragment extends Fragment {
                 return true;
             case R.id.menu_item_delete_all:
                 final RealmResults<Diary> diaries =
-                mRealm.where(Diary.class).findAll();
+                        mRealm.where(Diary.class).findAll();
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -85,9 +84,6 @@ public class DiaryListFragment extends Fragment {
                     }
                 });
                 return true;
-            case R.id.menu_item_slide_show: {
-                return true;
-            }
         }
         return false;
     }
@@ -96,8 +92,10 @@ public class DiaryListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_diary_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
+        View v = inflater.inflate(R.layout.fragment_diary_list, container,
+                false);
+        RecyclerView recyclerView =
+                (RecyclerView) v.findViewById(R.id.recycler);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -106,7 +104,7 @@ public class DiaryListFragment extends Fragment {
 
         RealmResults<Diary> diaries = mRealm.where(Diary.class).findAll();
         DiaryRealmAdapter adapter =
-                new DiaryRealmAdapter(getActivity(),diaries, true);
+                new DiaryRealmAdapter(getActivity(), diaries, true);
 
         recyclerView.setAdapter(adapter);
 

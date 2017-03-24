@@ -9,7 +9,6 @@
     <string name="permission_deny">端末内の画像を読み取るためのパーミッションが必要です。</string>
     <string name="add_diary">日記を追加します</string>
     <string name="delete_all">日記全削除</string>
-    <string name="start_slide_show">スライドショー開始</string>
     <string name="title_activity_show_diary">ShowDiaryActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

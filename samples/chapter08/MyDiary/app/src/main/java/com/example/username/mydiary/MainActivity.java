@@ -40,21 +40,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void createTestData() {
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                // idフィールドの最大値を取得
-                Number maxId = mRealm.where(Diary.class).max("id");
-                long nextId = 0;
-                if (maxId != null) nextId = maxId.longValue() + 1;
-                // カテゴリの追加
-                // createObjectではキー項目を渡してオブジェクトを生成する
-                Diary diary = realm.createObject(Diary.class, new Long(nextId));
-                diary.title="テストタイトル";
-                diary.bodyText="テスト本文です。";
-                diary.date="Feb 22";
-            }
-        });
+        mRealm.beginTransaction();
+        Number maxId = mRealm.where(Diary.class).max("id");
+        long nextId = 0;
+        if (maxId != null) nextId = maxId.longValue() + 1;
+        // カテゴリの追加
+        // createObjectではキー項目を渡してオブジェクトを生成する
+        Diary diary = mRealm.createObject(Diary.class, new Long(nextId));
+        diary.title = "テストタイトル";
+        diary.bodyText = "テスト本文です。";
+        diary.date = "Feb 22";
+        mRealm.commitTransaction();
     }
 
     private void showDiaryList() {
