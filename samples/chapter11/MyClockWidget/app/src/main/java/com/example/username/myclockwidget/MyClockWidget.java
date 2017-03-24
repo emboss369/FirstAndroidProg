@@ -48,9 +48,12 @@ public class MyClockWidget extends AppWidgetProvider {
         }
 
         int appWidgetId =
-                intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        AppWidgetManager manager = AppWidgetManager.getInstance(context);
-        updateAppWidget(context, manager, appWidgetId);
+                intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID);
+        if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+            AppWidgetManager manager = AppWidgetManager.getInstance(context);
+            updateAppWidget(context, manager, appWidgetId);
+        }
     }
 
     private void setAlarm(Context context, Intent intent) {
@@ -112,7 +115,7 @@ public class MyClockWidget extends AppWidgetProvider {
         for (int i = 0; i < ch.length; i++) {
             views.setImageViewResource(VIEWS[i], IMAGES[ch[i] - '0']);
         }
-        views.setImageViewResource(R.id.image_colon,R.drawable.charcolon);
+        views.setImageViewResource(R.id.image_colon, R.drawable.charcolon);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 }
