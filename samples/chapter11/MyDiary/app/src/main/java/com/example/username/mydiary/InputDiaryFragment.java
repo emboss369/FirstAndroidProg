@@ -91,6 +91,7 @@ public class InputDiaryFragment extends Fragment {
 
             @Override
             public void afterTextChanged(final Editable s) {
+                // 文字列が更新されるたびに頻繁に呼び出すため非同期処理であるexecuteTransactionAsyncを使う
                 mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -113,6 +114,7 @@ public class InputDiaryFragment extends Fragment {
 
             @Override
             public void afterTextChanged(final Editable s) {
+                // 文字列が更新されるたびに頻繁に呼び出すため非同期処理であるexecuteTransactionAsyncを使う
                 mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -170,6 +172,7 @@ public class InputDiaryFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                // 画像の保存処理は時間がかかる処理のため、非同期処理であるexecuteTransactionAsyncを使う
                 mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {

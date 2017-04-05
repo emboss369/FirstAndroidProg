@@ -51,24 +51,51 @@ public class ScheduleEditActivity extends AppCompatActivity {
     }
 
     public void onSaveTapped(View view) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+//        Date dateParse = new Date();
+//        try {
+//            dateParse = sdf.parse(mDateEdit.getText().toString());
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        final Date date = dateParse;
+//        mRealm.executeTransaction(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                Number maxId = realm.where(Schedule.class).max("id");
+//                long nextId = 0;
+//                if (maxId != null) nextId = maxId.longValue() + 1;
+//                Schedule schedule
+//                        = realm.createObject(Schedule.class, new Long(nextId));
+//                schedule.setDate(date);
+//                schedule.setTitle(mTitleEdit.getText().toString());
+//                schedule.setDetail(mDetailEdit.getText().toString());
+//            }
+//        });
+//        Toast.makeText(this, "追加しました", Toast.LENGTH_SHORT).show();
+//        finish();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = new Date();
+        Date dateParse = new Date();
         try {
-            date = sdf.parse(mDateEdit.getText().toString());
+            dateParse = sdf.parse(mDateEdit.getText().toString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        final Date date = dateParse;
         long scheduleId = getIntent().getLongExtra("schedule_id", -1);
         if (scheduleId != -1) {
-            RealmResults<Schedule> results = mRealm.where(Schedule.class)
+            final RealmResults<Schedule> results = mRealm.where(Schedule.class)
                     .equalTo("id", scheduleId).findAll();
-            mRealm.beginTransaction();
-            Schedule schedule = results.first();
-            schedule.setDate(date);
-            schedule.setTitle(mTitleEdit.getText().toString());
-            schedule.setDetail(mDetailEdit.getText().toString());
-            mRealm.commitTransaction();
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Schedule schedule = results.first();
+                    schedule.setDate(date);
+                    schedule.setTitle(mTitleEdit.getText().toString());
+                    schedule.setDetail(mDetailEdit.getText().toString());
+                }
+            });
             Snackbar.make(findViewById(android.R.id.content),
                     "アップデートしました", Snackbar.LENGTH_LONG)
                     .setAction("戻る", new View.OnClickListener() {
@@ -80,29 +107,36 @@ public class ScheduleEditActivity extends AppCompatActivity {
                     .setActionTextColor(Color.YELLOW)
                     .show();
         } else {
-            mRealm.beginTransaction();
-            Number maxId = mRealm.where(Schedule.class).max("id");
-            long nextId = 0;
-            if (maxId != null) nextId = maxId.longValue() + 1;
-            Schedule schedule
-                    = mRealm.createObject(Schedule.class, new Long(nextId));
-            schedule.setDate(date);
-            schedule.setTitle(mTitleEdit.getText().toString());
-            schedule.setDetail(mDetailEdit.getText().toString());
-            mRealm.commitTransaction();
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Number maxId = realm.where(Schedule.class).max("id");
+                    long nextId = 0;
+                    if (maxId != null) nextId = maxId.longValue() + 1;
+                    Schedule schedule
+                            = realm.createObject(Schedule.class, new Long(nextId));
+                    schedule.setDate(date);
+                    schedule.setTitle(mTitleEdit.getText().toString());
+                    schedule.setDetail(mDetailEdit.getText().toString());
+                }
+            });
             Toast.makeText(this, "追加しました", Toast.LENGTH_SHORT).show();
             finish();
         }
+
     }
 
     public void onDeleteTapped(View view) {
-        long scheduleId = getIntent().getLongExtra("schedule_id", -1);
+        final long scheduleId = getIntent().getLongExtra("schedule_id", -1);
         if (scheduleId != -1) {
-            mRealm.beginTransaction();
-            Schedule schedule = mRealm.where(Schedule.class)
-                    .equalTo("id", scheduleId).findFirst();
-            schedule.deleteFromRealm();
-            mRealm.commitTransaction();
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Schedule schedule = realm.where(Schedule.class)
+                            .equalTo("id", scheduleId).findFirst();
+                    schedule.deleteFromRealm();
+                }
+            });
             Toast.makeText(this, "削除しました", Toast.LENGTH_LONG).show();
         }
     }
