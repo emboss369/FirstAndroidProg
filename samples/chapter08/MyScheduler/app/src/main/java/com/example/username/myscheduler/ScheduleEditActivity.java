@@ -51,29 +51,6 @@ public class ScheduleEditActivity extends AppCompatActivity {
     }
 
     public void onSaveTapped(View view) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-//        Date dateParse = new Date();
-//        try {
-//            dateParse = sdf.parse(mDateEdit.getText().toString());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        final Date date = dateParse;
-//        mRealm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                Number maxId = realm.where(Schedule.class).max("id");
-//                long nextId = 0;
-//                if (maxId != null) nextId = maxId.longValue() + 1;
-//                Schedule schedule
-//                        = realm.createObject(Schedule.class, new Long(nextId));
-//                schedule.setDate(date);
-//                schedule.setTitle(mTitleEdit.getText().toString());
-//                schedule.setDetail(mDetailEdit.getText().toString());
-//            }
-//        });
-//        Toast.makeText(this, "追加しました", Toast.LENGTH_SHORT).show();
-//        finish();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         Date dateParse = new Date();
