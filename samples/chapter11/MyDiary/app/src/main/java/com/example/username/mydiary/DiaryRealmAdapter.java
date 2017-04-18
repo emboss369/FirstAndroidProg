@@ -16,17 +16,17 @@ import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
 
 /**
- * Created by user.name on 2017/03/05.
+ * Created by hiroaki on 2017/04/18.
  */
 
-public class DiaryRealmAdapter
-        extends RealmRecyclerViewAdapter<Diary, DiaryRealmAdapter.DiaryViewHolder> {
+public class DiaryRealmAdapter extends
+        RealmRecyclerViewAdapter<Diary, DiaryRealmAdapter.DiaryViewHolder> {
     Context context;
 
 
     public static class DiaryViewHolder extends RecyclerView.ViewHolder {
-
-        protected TextView title;
+        protected TextView
+                title;
         protected TextView bodyText;
         protected TextView date;
         protected ImageView photo;
@@ -37,16 +37,17 @@ public class DiaryRealmAdapter
             bodyText = (TextView) itemView.findViewById(R.id.body);
             date = (TextView) itemView.findViewById(R.id.date);
             photo = (ImageView) itemView.findViewById(R.id.diary_photo);
+
         }
     }
 
     public DiaryRealmAdapter(@NonNull Context context,
-                             @Nullable OrderedRealmCollection<Diary> data, boolean autoUpdate) {
+                             @Nullable
+                                     OrderedRealmCollection<Diary> data,
+                             boolean autoUpdate) {
         super(data, autoUpdate);
         this.context = context;
     }
-
-
 
     @Override
     public DiaryViewHolder onCreateViewHolder(ViewGroup parent,
@@ -62,8 +63,8 @@ public class DiaryRealmAdapter
                 int position = holder.getAdapterPosition();
                 Diary diary = getData().get(position);
                 long diaryId = diary.id;
-
-                Intent intent = new Intent(context, ShowDiaryActivity.class);
+                Intent
+                        intent = new Intent(context, ShowDiaryActivity.class);
                 intent.putExtra(ShowDiaryActivity.DIARY_ID, diaryId);
                 context.startActivity(intent);
             }
@@ -75,6 +76,7 @@ public class DiaryRealmAdapter
     @Override
     public void onBindViewHolder(DiaryViewHolder holder,
                                  int position) {
+
         Diary diary = getData().get(position);
         holder.title.setText(diary.title);
         holder.bodyText.setText(diary.bodyText);
@@ -83,6 +85,7 @@ public class DiaryRealmAdapter
             Bitmap bmp = MyUtils.getImageFromByte(diary.image);
             holder.photo.setImageBitmap(bmp);
         }
-    }
-}
 
+    }
+
+}

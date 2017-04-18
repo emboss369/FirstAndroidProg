@@ -16,55 +16,55 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by user.name on 2017/03/05.
+ * Created by hiroaki on 2017/04/18.
  */
 
 public class MyUtils {
+
     public static Bitmap getImageFromByte(byte[] bytes) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.length ,opt);
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opt);
         int bitmapSize = 1;
-        if((opt.outHeight * opt.outWidth) > 500000) {
+        if ((opt.outHeight * opt.outWidth) > 500000) {
             double outSize = (double) (opt.outHeight * opt.outWidth) / 500000;
-            bitmapSize = (int)(Math.sqrt(outSize) + 1);
+            bitmapSize = (int) (Math.sqrt(outSize) + 1);
         }
-
         opt.inJustDecodeBounds = false;
         opt.inSampleSize = bitmapSize;
-        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length ,opt);
+        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opt);
         return bmp;
     }
 
-    public static byte[] getByteFromImage(Bitmap bmp){
+    public static byte[] getByteFromImage(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
     }
 
-    public static Bitmap getImageFromStream(ContentResolver resolver, Uri uri) throws
-            IOException {
-        InputStream in;
+    public static Bitmap getImageFromStream(ContentResolver resolver, Uri uri)
+            throws IOException {
+        InputStream
+                in;
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inJustDecodeBounds = true;
         in = resolver.openInputStream(uri);
-        BitmapFactory.decodeStream(in,null,opt);
+        BitmapFactory.decodeStream(in, null, opt);
         in.close();
         int bitmapSize = 1;
-        if((opt.outHeight * opt.outWidth) > 500000) {
+        if ((opt.outHeight * opt.outWidth) > 500000) {
             double outSize = (double) (opt.outHeight * opt.outWidth) / 500000;
-            bitmapSize = (int)(Math.sqrt(outSize) + 1);
+            bitmapSize = (int) (Math.sqrt(outSize) + 1);
         }
-
         opt.inJustDecodeBounds = false;
         opt.inSampleSize = bitmapSize;
         in = resolver.openInputStream(uri);
-        Bitmap bmp = BitmapFactory.decodeStream(in,null,opt);
+        Bitmap bmp = BitmapFactory.decodeStream(in, null, opt);
         in.close();
         return bmp;
-
     }
+
     public static void tintMenuIcon(Context context, MenuItem item,
                                     @ColorRes int color) {
         Drawable normalDrawable = item.getIcon();
@@ -73,6 +73,4 @@ public class MyUtils {
                 ContextCompat.getColor(context, color));
         item.setIcon(wrapDrawable);
     }
-
-
 }

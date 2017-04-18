@@ -6,7 +6,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 /**
- * Created by user.name on 2017/03/05.
+ * Created by hiroaki on 2017/04/18.
  */
 
 public class MyDiaryApplication extends Application {
@@ -14,7 +14,8 @@ public class MyDiaryApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Realm.init(this);
-        RealmConfiguration realmConfig
+        RealmConfiguration
+                realmConfig
                 = new RealmConfiguration.Builder().build();
         Realm.setDefaultConfiguration(realmConfig);
     }

@@ -17,34 +17,11 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DiaryListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DiaryListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DiaryListFragment extends Fragment {
-
     private OnFragmentInteractionListener mListener;
-
     private Realm mRealm;
 
     public DiaryListFragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mRealm = Realm.getDefaultInstance();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
     }
 
     public static DiaryListFragment newInstance() {
@@ -53,66 +30,36 @@ public class DiaryListFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mRealm = Realm.getDefaultInstance();
+
+
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_diary_list, menu);
-        MenuItem addDiary = menu.findItem(R.id.menu_item_add_diary);
-        MenuItem deleteAll = menu.findItem(R.id.menu_item_delete_all);
-        MyUtils.tintMenuIcon(getContext(), addDiary, android.R.color.white);
-        MyUtils.tintMenuIcon(getContext(), deleteAll, android.R.color.white);
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_add_diary:
-                if (mListener != null) mListener.onAddDiarySelected();
-                return true;
-            case R.id.menu_item_delete_all:
-                final RealmResults<Diary> diaries =
-                        mRealm.where(Diary.class).findAll();
-                mRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        diaries.deleteAllFromRealm();
-                    }
-                });
-                return true;
-        }
-        return false;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_diary_list, container,
-                false);
-        RecyclerView recyclerView =
-                (RecyclerView) v.findViewById(R.id.recycler);
-
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        View v = inflater.inflate(R.layout.fragment_diary_list, container, false);
+        RecyclerView
+                recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
+        LinearLayoutManager
+                llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-
         recyclerView.setLayoutManager(llm);
 
         RealmResults<Diary> diaries = mRealm.where(Diary.class).findAll();
         DiaryRealmAdapter adapter =
                 new DiaryRealmAdapter(getActivity(), diaries, true);
-
         recyclerView.setAdapter(adapter);
-
-
         return v;
-
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -131,18 +78,50 @@ public class DiaryListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onAddDiarySelected();
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_diary_list, menu);
+        MenuItem
+                addDiary = menu.findItem(R.id.menu_item_add_diary);
+        MenuItem deleteAll = menu.findItem(R.id.menu_item_delete_all);
+        MyUtils.tintMenuIcon(getContext(), addDiary, android.R.color.white);
+        MyUtils.tintMenuIcon(getContext(), deleteAll, android.R.color.white);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_item_add_diary:
+                if (mListener != null) mListener.onAddDiarySelected();
+                return true;
+            case R.id.menu_item_delete_all:
+                final RealmResults<Diary> diaries =
+                        mRealm.where(Diary.class).findAll();
+                mRealm.executeTransaction(
+                        new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                diaries.deleteAllFromRealm();
+                            }
+                        });
+                return true;
+        }
+        return false;
     }
 }

@@ -20,7 +20,6 @@ import io.realm.Realm;
 public class ShowDiaryActivity extends AppCompatActivity {
     public static final String DIARY_ID = "DIARY_ID";
     private static final long ERR_CD = -1;
-
     private String mBodyText;
     private Realm mRealm;
     private Bitmap mBitmap;
@@ -43,25 +42,22 @@ public class ShowDiaryActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mRealm = Realm.getDefaultInstance();
-
         Intent intent = getIntent();
-        final long diaryId = intent.getLongExtra(DIARY_ID, ERR_CD);
 
+        final long diaryId = intent.getLongExtra(DIARY_ID, ERR_CD);
         TextView body = (TextView) findViewById(R.id.body);
         ImageView imageView = (ImageView) findViewById(R.id.toolbar_image);
-        NestedScrollView scrollView =
+        NestedScrollView
+                scrollView =
                 (NestedScrollView) findViewById(R.id.scroll_view);
-
         Diary diary = mRealm.where(Diary.class).equalTo("id", diaryId).findFirst();
-
-        CollapsingToolbarLayout layout =
-        (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-
+        CollapsingToolbarLayout
+                layout =
+                (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         layout.setTitle(diary.title);
-
         mBodyText = diary.bodyText;
-
         body.setText(diary.bodyText);
         byte[] bytes = diary.image;
         if (bytes != null && bytes.length > 0) {
@@ -69,17 +65,16 @@ public class ShowDiaryActivity extends AppCompatActivity {
             imageView.setImageBitmap(mBitmap);
 
             Palette palette = Palette.from(mBitmap).generate();
-
             int titleColor = palette.getLightVibrantColor(Color.WHITE);
             int bodyColor = palette.getDarkMutedColor(Color.BLACK);
             int scrimColor = palette.getMutedColor(Color.DKGRAY);
             int iconColor = palette.getLightMutedColor(Color.LTGRAY);
-
             layout.setExpandedTitleColor(titleColor);
             layout.setContentScrimColor(scrimColor);
             scrollView.setBackgroundColor(bodyColor);
             body.setTextColor(titleColor);
-            fab.setBackgroundTintList(ColorStateList.valueOf(iconColor));
+            fab.setBackgroundTintList(
+                    ColorStateList.valueOf(iconColor));
         }
     }
 
@@ -88,5 +83,4 @@ public class ShowDiaryActivity extends AppCompatActivity {
         super.onDestroy();
         mRealm.close();
     }
-
 }

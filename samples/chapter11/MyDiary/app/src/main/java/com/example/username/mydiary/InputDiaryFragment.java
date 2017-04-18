@@ -26,20 +26,18 @@ import io.realm.Realm;
 
 import static android.app.Activity.RESULT_OK;
 
+
 public class InputDiaryFragment extends Fragment {
+
     private static final String DIARY_ID = "DIARY_ID";
     private static final int REQUEST_CODE = 1;
     private static final int PERMISSION_REQUEST_CODE = 2;
-
     private long mDiaryId;
     private Realm mRealm;
     private EditText mTitleEdit;
     private EditText mBodyEdit;
-    private ImageView mDiaryImage;
-
-    public InputDiaryFragment() {
-        // Required empty public constructor
-    }
+    private ImageView
+            mDiaryImage;
 
     public static InputDiaryFragment newInstance(long diaryId) {
         InputDiaryFragment fragment = new InputDiaryFragment();
@@ -51,11 +49,14 @@ public class InputDiaryFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mDiaryId = getArguments().getLong(DIARY_ID);
         }
         mRealm = Realm.getDefaultInstance();
+
+
     }
 
     @Override
@@ -72,55 +73,55 @@ public class InputDiaryFragment extends Fragment {
         mTitleEdit = (EditText) v.findViewById(R.id.title);
         mBodyEdit = (EditText) v.findViewById(R.id.bodyEditText);
         mDiaryImage = (ImageView) v.findViewById(R.id.diary_photo);
-
         mDiaryImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 requestReadStorage(view);
             }
         });
-
         mTitleEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {}
+                                          int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {}
+                                      int count) {
+            }
 
             @Override
             public void afterTextChanged(final Editable s) {
-                // 文字列が更新されるたびに頻繁に呼び出すため非同期処理であるexecuteTransactionAsyncを使う
                 mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Diary diary = realm.where(Diary.class).equalTo("id", mDiaryId)
-                                .findFirst();
-                        diary.title=s.toString();
+                        Diary diary = realm.where(Diary.class).equalTo("id",
+                                mDiaryId).findFirst();
+
+                        diary.title = s.toString();
                     }
                 });
             }
         });
-
         mBodyEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {}
+                                          int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {}
+                                      int count) {
+            }
 
             @Override
             public void afterTextChanged(final Editable s) {
-                // 文字列が更新されるたびに頻繁に呼び出すため非同期処理であるexecuteTransactionAsyncを使う
                 mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Diary diary = realm.where(Diary.class).equalTo("id", mDiaryId)
-                                .findFirst();
-                        diary.bodyText=s.toString();
+                        Diary diary = realm.where(Diary.class).equalTo("id",
+                                mDiaryId).findFirst();
+                        diary.bodyText = s.toString();
                     }
                 });
             }
@@ -130,18 +131,16 @@ public class InputDiaryFragment extends Fragment {
 
     private void requestReadStorage(View view) {
         if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.READ_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Snackbar.make(view,R.string.rationale,
-                        Snackbar.LENGTH_LONG).show();
+
+
+                Snackbar.make(view, R.string.rationale, Snackbar.LENGTH_LONG).show();
             }
-
-            requestPermissions(new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
             }, PERMISSION_REQUEST_CODE);
-
         } else {
             pickImage();
         }
@@ -152,18 +151,16 @@ public class InputDiaryFragment extends Fragment {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(
-                Intent.createChooser(
-                        intent,
-                        getString(R.string.pick_image)
-                ),
+                Intent.createChooser(intent, getString(R.string.pick_image)),
                 REQUEST_CODE);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-
-            Uri uri = (data == null) ? null : data.getData();
+            Uri
+                    uri = (data == null) ? null : data.getData();
             if (uri != null) {
                 try {
                     Bitmap img = MyUtils.getImageFromStream(
@@ -172,18 +169,20 @@ public class InputDiaryFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                // 画像の保存処理は時間がかかる処理のため、非同期処理であるexecuteTransactionAsyncを使う
                 mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Diary diary = realm.where(Diary.class).equalTo("id", mDiaryId)
-                                .findFirst();
-                        BitmapDrawable bitmap =
-                                (BitmapDrawable) mDiaryImage.getDrawable();
+                        Diary diary =
+                                realm.where(Diary.class).equalTo("id", mDiaryId)
+                                        .findFirst();
+                        BitmapDrawable
+                                bitmap = (BitmapDrawable) mDiaryImage.getDrawable();
                         byte[] bytes = MyUtils.getByteFromImage(bitmap.getBitmap());
                         if (bytes != null && bytes.length > 0) {
-                            diary.image=bytes;
+                            diary.image = bytes;
                         }
+
+
                     }
                 });
             }
@@ -199,10 +198,13 @@ public class InputDiaryFragment extends Fragment {
                     grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Snackbar.make(mDiaryImage, R.string.permission_deny,
                         Snackbar.LENGTH_LONG).show();
-
             } else {
                 pickImage();
+
+
             }
         }
     }
+
+
 }
